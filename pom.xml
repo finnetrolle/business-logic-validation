@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>ru.finnetrolle</groupId>
+    <artifactId>business-logic-validation</artifactId>
+    <version>0.1.0-SNAPSHOT</version>
+
+    <packaging>jar</packaging>
+    <developers>
+        <developer>
+            <name>Max Syachin</name>
+            <email>maxsyachin@gmail.com</email>
+            <id>Finne Trolle</id>
+            <url>http://www.finnetrolle.ru</url>
+        </developer>
+    </developers>
+
+    <name>Business logic validation</name>
+    <description>Module to validate with rules</description>
+    <url>http://www.finnetrolle.ru/business-logic-validation/</url>
+
+    <licenses>
+        <license>
+            <name>The MIT License (MIT)</name>
+            <url>https://opensource.org/licenses/MIT</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+
+    <scm>
+        <url>https://github.com/finnetrolle/caching_container</url>
+        <connection>scm:git:https://github.com/finnetrolle/caching_container</connection>
+        <developerConnection>scm:git:https://github.com/finnetrolle/caching_container</developerConnection>
+    </scm>
+
+    <parent>
+        <groupId>org.sonatype.oss</groupId>
+        <artifactId>oss-parent</artifactId>
+        <version>7</version>
+    </parent>
+
+
+</project>
