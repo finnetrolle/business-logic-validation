@@ -1,6 +1,8 @@
 language: java
 jdk:
   - oraclejdk8
+  - oraclejdk7
+  - openjdk7
 install:
   - mvn --settings .travis/settings.xml install -DskipTests=true -Dmaven.javadoc.skip=true -Dgpg.skip -B -V
 before_install:
@@ -12,7 +14,7 @@ deploy:
     script: .travis/deploy.sh
     skip_cleanup: true
     on:
-      repo: finnetrolle/business-logic-validation
+      repo: DracoBlue/http-response-headers
       branch: master
       jdk: oraclejdk8
   -
@@ -20,6 +22,6 @@ deploy:
     script: .travis/deploy.sh
     skip_cleanup: true
     on:
-      repo: finnetrolle/business-logic-validation
+      repo: DracoBlue/http-response-headers
       tags: true
       jdk: oraclejdk8
