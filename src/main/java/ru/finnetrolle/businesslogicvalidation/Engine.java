@@ -6,7 +6,12 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * Created by finnetrolle on 06.03.2017.
+ * Business Logic Validation
+ * Created by finnetrolle on 07.03.2017.
+ */
+
+/**
+ * This is an entry point class
  */
 public final class Engine {
 
