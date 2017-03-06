@@ -12,13 +12,11 @@ import java.util.Objects;
  */
 public class Violation {
 
-    private final String name;
     private final String message;
     private final Integer code;
     private final ViolationLevel violationLevel;
 
-    private Violation(String name, String message, Integer code, ViolationLevel violationLevel) {
-        this.name = name;
+    private Violation(String message, Integer code, ViolationLevel violationLevel) {
         this.message = message;
         this.code = code;
         this.violationLevel = violationLevel;
@@ -26,21 +24,13 @@ public class Violation {
 
     /**
      * fabric method to construct object
-     * @param name violation name
      * @param message violation message
      * @param code violation code
      * @param violationLevel violation level
      * @return ready object
      */
-    public static Violation create(String name, String message, Integer code, ViolationLevel violationLevel) {
-        return new Violation(name, message, code, violationLevel);
-    }
-
-    /**
-     * @return violation name
-     */
-    public String getName() {
-        return name;
+    public static Violation create(String message, Integer code, ViolationLevel violationLevel) {
+        return new Violation(message, code, violationLevel);
     }
 
     /**
@@ -67,8 +57,7 @@ public class Violation {
     @Override
     public String toString() {
         return "Violation{" +
-                "name='" + name + '\'' +
-                ", message='" + message + '\'' +
+                "message='" + message + '\'' +
                 ", code=" + code +
                 ", violationLevel=" + violationLevel +
                 '}';
@@ -79,7 +68,7 @@ public class Violation {
         if (this == o) return true;
         if (!(o instanceof Violation)) return false;
         Violation violation = (Violation) o;
-        return Objects.equals(name, violation.name) &&
+        return
                 Objects.equals(message, violation.message) &&
                 Objects.equals(code, violation.code) &&
                 violationLevel == violation.violationLevel;
@@ -87,6 +76,6 @@ public class Violation {
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, message, code, violationLevel);
+        return Objects.hash(message, code, violationLevel);
     }
 }

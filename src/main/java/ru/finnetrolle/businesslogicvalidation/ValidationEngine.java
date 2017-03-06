@@ -20,7 +20,7 @@ import java.util.List;
  */
 public class ValidationEngine<V> {
 
-    private List<Rule<V, ?>> rules = new ArrayList<>();
+    private List<Rule<V>> rules = new ArrayList<>();
 
     private ValidationEngine() {
     }
@@ -41,9 +41,9 @@ public class ValidationEngine<V> {
      * @return ready object
      */
     @SafeVarargs
-    public static <V> ValidationEngine<V> create(Rule<V, ?>... rules) {
+    public static <V> ValidationEngine<V> create(Rule<V>... rules) {
         ValidationEngine<V> engine = new ValidationEngine<>();
-        for (Rule<V, ?> rule : rules) {
+        for (Rule<V> rule : rules) {
             engine.addRule(rule);
         }
         return engine;
@@ -54,14 +54,14 @@ public class ValidationEngine<V> {
      * @param rule rule
      * @return engine (to make event chain)
      */
-    public ValidationEngine<V> addRule(Rule<V, ?> rule) {
+    public ValidationEngine<V> addRule(Rule<V> rule) {
         rules.add(rule);
         return this;
     }
 
     private List<Violation> getViolations(V value) {
         List<Violation> violations = new ArrayList<>();
-        for (Rule<V, ?> rule : rules) {
+        for (Rule<V> rule : rules) {
             Violation violation = rule.check(value);
             if (violation != null) {
                 violations.add(violation);

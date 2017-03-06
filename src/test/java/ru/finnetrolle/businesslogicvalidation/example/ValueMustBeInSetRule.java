@@ -1,42 +1,27 @@
 package ru.finnetrolle.businesslogicvalidation.example;
 
-import ru.finnetrolle.businesslogicvalidation.specific.PermissibleRule;
+import ru.finnetrolle.businesslogicvalidation.ExtendableRule;
 
 import java.util.Set;
+
+import static ru.finnetrolle.businesslogicvalidation.dto.Descriptor.rule;
 
 /**
  * Business Logic Validation
  * Created by finnetrolle on 25.11.2015.
  */
-public class ValueMustBeInSetRule extends PermissibleRule<String, Set<String>> {
+public class ValueMustBeInSetRule extends ExtendableRule<String> {
 
-    public ValueMustBeInSetRule(Set<String> data) {
-        super(data);
-    }
+    private final Set<String> set;
 
-    public static ValueMustBeInSetRule create(Set<String> data) {
-        return new ValueMustBeInSetRule(data);
-    }
-
-    @Override
-    protected boolean validate(String value) {
-        return data.contains(value);
+    public ValueMustBeInSetRule(Set<String> set) {
+        super(permissible(rule(101, "Value must be in set")));
+        this.set = set;
     }
 
     @Override
-    protected String getName() {
-        return "Set checker";
+    public boolean validateObject(String object) {
+        return set.contains(object);
     }
-
-    @Override
-    protected String getMessage(String value) {
-        return "value " + value + " must be in set";
-    }
-
-    @Override
-    protected Integer getCode() {
-        return 10;
-    }
-
 
 }
