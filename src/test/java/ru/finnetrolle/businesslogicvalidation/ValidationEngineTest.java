@@ -9,6 +9,7 @@ import ru.finnetrolle.businesslogicvalidation.example.ValueMustBeInSetRule;
 import java.util.*;
 
 import static org.junit.Assert.*;
+import static ru.finnetrolle.businesslogicvalidation.SimpleRule.critical;
 
 /**
  * Business Logic Validation
@@ -52,7 +53,7 @@ public class ValidationEngineTest {
     @Test
     public void testStopPropagationRule() throws Exception {
         ValidationResult result = Engine.validate(VALUES).forRules(
-                LambdaRule.critical(Descriptor.rule(404, "null value"), Objects::nonNull),
+                critical(Descriptor.rule(404, "null value"), Objects::nonNull),
                 new StringMustHaveLength3Rule());
 
         assertFalse(result.passed());

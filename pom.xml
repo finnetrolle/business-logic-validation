@@ -4,7 +4,7 @@
 
     <groupId>ru.finnetrolle</groupId>
     <artifactId>business-logic-validation</artifactId>
-    <version>0.2.0-SNAPSHOT</version>
+    <version>0.2.1-SNAPSHOT</version>
 
     <packaging>jar</packaging>
     <developers>
