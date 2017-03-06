@@ -3,15 +3,10 @@ package ru.finnetrolle.businesslogicvalidation;
 import org.junit.Before;
 import org.junit.Test;
 import ru.finnetrolle.businesslogicvalidation.dto.ValidationResult;
-import ru.finnetrolle.businesslogicvalidation.dto.ViolationLevel;
-import ru.finnetrolle.businesslogicvalidation.example.StringMustBeBigRule;
+import ru.finnetrolle.businesslogicvalidation.example.StringMustHaveLength3Rule;
 import ru.finnetrolle.businesslogicvalidation.example.ValueMustBeInSetRule;
-import ru.finnetrolle.businesslogicvalidation.specific.NullValuePropagationStopper;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import static org.junit.Assert.*;
 
@@ -36,9 +31,8 @@ public class ValidationEngineTest {
 
     @Test
     public void testValidateCollection() throws Exception {
-        ValidationResult result = ValidationEngine.create(
-                ValueMustBeInSetRule.create(SET)
-        ).validate(VALUES);
+        ValidationResult result = Engine.validate(VALUES)
+                .forRule(new ValueMustBeInSetRule(SET));
 
         assertEquals(ViolationLevel.PERMISSIBLE, result.getLevel());
         assertEquals(3, result.getViolations().size());
@@ -47,9 +41,8 @@ public class ValidationEngineTest {
 
     @Test
     public void testValidateSingle() throws Exception {
-        ValidationResult result = ValidationEngine.create(
-                ValueMustBeInSetRule.create(SET)
-        ).validate("Three");
+        ValidationResult result = Engine.validate("Three")
+                .forRule(new ValueMustBeInSetRule(SET));
 
         assertEquals(true, result.passed());
         assertEquals(0, result.getViolations().size());
@@ -58,10 +51,10 @@ public class ValidationEngineTest {
 
     @Test
     public void testStopPropagationRule() throws Exception {
-        ValidationResult result = ValidationEngine.create(
-                NullValuePropagationStopper.create(),
-                StringMustBeBigRule.create()
-        ).validate(VALUES);
+        ValidationResult result = Engine.validate(VALUES).forRules(
+                LambdaRule.critical(Descriptor.rule(404, "null value"), Objects::nonNull),
+                new StringMustHaveLength3Rule());
+
         assertFalse(result.passed());
         assertEquals(ViolationLevel.CRITICAL, result.getLevel());
         assertEquals(3, result.getViolations().size());
@@ -69,9 +62,8 @@ public class ValidationEngineTest {
 
     @Test(expected = NullPointerException.class)
     public void testNPE() throws Exception {
-        ValidationResult result = ValidationEngine.create(
-                StringMustBeBigRule.create()
-        ).validate(VALUES);
+        ValidationResult result = Engine.validate(VALUES)
+                .forRule(new StringMustHaveLength3Rule());
     }
 
 }

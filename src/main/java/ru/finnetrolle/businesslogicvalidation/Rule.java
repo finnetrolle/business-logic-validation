@@ -1,7 +1,6 @@
 package ru.finnetrolle.businesslogicvalidation;
 
 import ru.finnetrolle.businesslogicvalidation.dto.Violation;
-import ru.finnetrolle.businesslogicvalidation.dto.ViolationLevel;
 
 /**
  * Business Logic Validation
@@ -11,18 +10,23 @@ import ru.finnetrolle.businesslogicvalidation.dto.ViolationLevel;
 /**
  * Parent of all rules
  * @param <V> type of value
- * @param <D> type of data
  */
-public abstract class Rule<V, D> {
+public abstract class Rule<V> {
 
-    protected final D data;
+    public static RuleBuilder notice(Descriptor descriptor) {
+        return RuleBuilder.getInstance(descriptor, ViolationLevel.NOTICE);
+    }
 
-    /**
-     * Make constructor matching super in derived rules
-     * @param data data to validate values with
-     */
-    public Rule(D data) {
-        this.data = data;
+    public static RuleBuilder permissible(Descriptor descriptor) {
+        return RuleBuilder.getInstance(descriptor, ViolationLevel.PERMISSIBLE);
+    }
+
+    public static RuleBuilder error(Descriptor descriptor) {
+        return RuleBuilder.getInstance(descriptor, ViolationLevel.ERROR);
+    }
+
+    public static RuleBuilder critical(Descriptor descriptor) {
+        return RuleBuilder.getInstance(descriptor, ViolationLevel.CRITICAL);
     }
 
     /**
@@ -30,11 +34,11 @@ public abstract class Rule<V, D> {
      * @param value value to validate
      * @return null for success validation or violation otherwise
      */
-    public final Violation check(V value) {
+    final Violation check(V value) {
         if (validate(value)) {
             return null;
         } else {
-            return Violation.create(getName(), getMessage(value), getCode(), getViolationLevel());
+            return Violation.create(getMessage(value), getCode(), getViolationLevel());
         }
     }
 
@@ -44,12 +48,6 @@ public abstract class Rule<V, D> {
      * @return boolean result of validation
      */
     protected abstract boolean validate(V value);
-
-    /**
-     * Override this method to define name of your derived rule
-     * @return name of the rule
-     */
-    protected abstract String getName();
 
     /**
      * Override this method to define fail validation message

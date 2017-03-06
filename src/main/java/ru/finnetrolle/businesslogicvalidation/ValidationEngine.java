@@ -1,7 +1,6 @@
 package ru.finnetrolle.businesslogicvalidation;
 
 import ru.finnetrolle.businesslogicvalidation.dto.Violation;
-import ru.finnetrolle.businesslogicvalidation.dto.ViolationLevel;
 import ru.finnetrolle.businesslogicvalidation.dto.ValidationResult;
 
 import java.util.ArrayList;
@@ -20,7 +19,7 @@ import java.util.List;
  */
 public class ValidationEngine<V> {
 
-    private List<Rule<V, ?>> rules = new ArrayList<>();
+    private List<Rule<V>> rules = new ArrayList<>();
 
     private ValidationEngine() {
     }
@@ -30,7 +29,7 @@ public class ValidationEngine<V> {
      * @param <V> type of value
      * @return ready object
      */
-    public static <V> ValidationEngine<V> create() {
+    static <V> ValidationEngine<V> create() {
         return new ValidationEngine<>();
     }
 
@@ -41,9 +40,9 @@ public class ValidationEngine<V> {
      * @return ready object
      */
     @SafeVarargs
-    public static <V> ValidationEngine<V> create(Rule<V, ?>... rules) {
+    static <V> ValidationEngine<V> create(Rule<V>... rules) {
         ValidationEngine<V> engine = new ValidationEngine<>();
-        for (Rule<V, ?> rule : rules) {
+        for (Rule<V> rule : rules) {
             engine.addRule(rule);
         }
         return engine;
@@ -54,14 +53,14 @@ public class ValidationEngine<V> {
      * @param rule rule
      * @return engine (to make event chain)
      */
-    public ValidationEngine<V> addRule(Rule<V, ?> rule) {
+    ValidationEngine<V> addRule(Rule<V> rule) {
         rules.add(rule);
         return this;
     }
 
     private List<Violation> getViolations(V value) {
         List<Violation> violations = new ArrayList<>();
-        for (Rule<V, ?> rule : rules) {
+        for (Rule<V> rule : rules) {
             Violation violation = rule.check(value);
             if (violation != null) {
                 violations.add(violation);
@@ -87,7 +86,7 @@ public class ValidationEngine<V> {
      * @param values collection of value to validate
      * @return validation result
      */
-    public ValidationResult validate(Collection<V> values) {
+    ValidationResult validate(Collection<V> values) {
         List<Violation> violations = new ArrayList<>();
         for (V value : values) {
             violations.addAll(getViolations(value));
