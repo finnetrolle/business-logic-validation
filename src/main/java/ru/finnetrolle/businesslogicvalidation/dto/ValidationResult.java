@@ -1,5 +1,7 @@
 package ru.finnetrolle.businesslogicvalidation.dto;
 
+import ru.finnetrolle.businesslogicvalidation.ViolationLevel;
+
 import java.util.List;
 import java.util.Objects;
 

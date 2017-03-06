@@ -1,4 +1,4 @@
-package ru.finnetrolle.businesslogicvalidation.dto;
+package ru.finnetrolle.businesslogicvalidation;
 
 /**
  * Business Logic Validation

@@ -1,9 +1,7 @@
 package ru.finnetrolle.businesslogicvalidation;
 
-import ru.finnetrolle.businesslogicvalidation.dto.Descriptor;
-import ru.finnetrolle.businesslogicvalidation.dto.ViolationLevel;
-
 /**
+ * Business Logic Validation
  * Created by finnetrolle on 07.03.2017.
  */
 public class SimpleRule<V> extends Rule<V> {

@@ -2,9 +2,7 @@ package ru.finnetrolle.businesslogicvalidation;
 
 import org.junit.Before;
 import org.junit.Test;
-import ru.finnetrolle.businesslogicvalidation.dto.Descriptor;
 import ru.finnetrolle.businesslogicvalidation.dto.ValidationResult;
-import ru.finnetrolle.businesslogicvalidation.dto.ViolationLevel;
 import ru.finnetrolle.businesslogicvalidation.example.StringMustHaveLength3Rule;
 import ru.finnetrolle.businesslogicvalidation.example.ValueMustBeInSetRule;
 
@@ -54,7 +52,7 @@ public class ValidationEngineTest {
     @Test
     public void testStopPropagationRule() throws Exception {
         ValidationResult result = Engine.validate(VALUES).forRules(
-                LambdaRule.critical(Descriptor.rule(404, "null value"), Objects::isNull),
+                LambdaRule.critical(Descriptor.rule(404, "null value"), Objects::nonNull),
                 new StringMustHaveLength3Rule());
 
         assertFalse(result.passed());

@@ -2,7 +2,7 @@ package ru.finnetrolle.businesslogicvalidation.example;
 
 import ru.finnetrolle.businesslogicvalidation.ExtendableRule;
 
-import static ru.finnetrolle.businesslogicvalidation.dto.Descriptor.rule;
+import static ru.finnetrolle.businesslogicvalidation.Descriptor.rule;
 
 /**
  * Created by finnetrolle on 07.03.2017.
@@ -15,6 +15,6 @@ public class StringMustHaveLength3Rule extends ExtendableRule<String> {
 
     @Override
     public boolean validateObject(String object) {
-        return object.length() == 3;
+        return object.length() > 3;
     }
 }

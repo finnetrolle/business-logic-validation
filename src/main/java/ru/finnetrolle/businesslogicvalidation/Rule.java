@@ -1,10 +1,6 @@
 package ru.finnetrolle.businesslogicvalidation;
 
-import ru.finnetrolle.businesslogicvalidation.dto.Descriptor;
 import ru.finnetrolle.businesslogicvalidation.dto.Violation;
-import ru.finnetrolle.businesslogicvalidation.dto.ViolationLevel;
-
-import java.util.function.Predicate;
 
 /**
  * Business Logic Validation

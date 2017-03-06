@@ -1,7 +1,8 @@
-package ru.finnetrolle.businesslogicvalidation.dto;
+package ru.finnetrolle.businesslogicvalidation;
 
 /**
- * Created by finnetrolle on 06.03.2017.
+ * Business Logic Validation
+ * Created by finnetrolle on 07.03.2017.
  */
 public class Descriptor {
 

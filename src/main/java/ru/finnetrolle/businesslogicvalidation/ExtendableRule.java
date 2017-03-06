@@ -1,9 +1,8 @@
 package ru.finnetrolle.businesslogicvalidation;
 
-import ru.finnetrolle.businesslogicvalidation.dto.ViolationLevel;
-
 /**
- * Created by finnetrolle on 06.03.2017.
+ * Business Logic Validation
+ * Created by finnetrolle on 07.03.2017.
  */
 public abstract class ExtendableRule<IN> extends Rule<IN> implements Validating<IN> {
 

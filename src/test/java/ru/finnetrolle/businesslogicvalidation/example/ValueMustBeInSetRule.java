@@ -4,7 +4,7 @@ import ru.finnetrolle.businesslogicvalidation.ExtendableRule;
 
 import java.util.Set;
 
-import static ru.finnetrolle.businesslogicvalidation.dto.Descriptor.rule;
+import static ru.finnetrolle.businesslogicvalidation.Descriptor.rule;
 
 /**
  * Business Logic Validation
