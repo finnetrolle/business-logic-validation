@@ -14,7 +14,7 @@ deploy:
     script: .travis/deploy.sh
     skip_cleanup: true
     on:
-      repo: DracoBlue/http-response-headers
+      repo: finnetrolle/business-logic-validation
       branch: master
       jdk: oraclejdk8
   -
@@ -22,6 +22,6 @@ deploy:
     script: .travis/deploy.sh
     skip_cleanup: true
     on:
-      repo: DracoBlue/http-response-headers
+      repo: finnetrolle/business-logic-validation
       tags: true
       jdk: oraclejdk8
