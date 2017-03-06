@@ -2,7 +2,7 @@ language: java
 jdk:
   - oraclejdk8
 install:
-  - mvn --settings .travis/settings.xml install -DskipTests=true -Dgpg.skip -Dmaven.javadoc.skip=true -B -V
+  - mvn --settings .travis/settings.xml install -DskipTests=true -Dmaven.javadoc.skip=true -Dgpg.skip -B -V
 before_install:
   - if [ ! -z "$GPG_SECRET_KEYS" ]; then echo $GPG_SECRET_KEYS | base64 --decode | $GPG_EXECUTABLE --import; fi
   - if [ ! -z "$GPG_OWNERTRUST" ]; then echo $GPG_OWNERTRUST | base64 --decode | $GPG_EXECUTABLE --import-ownertrust; fi
@@ -12,7 +12,7 @@ deploy:
     script: .travis/deploy.sh
     skip_cleanup: true
     on:
-      repo: ExampleOrg/my-library
+      repo: finnetrolle/business-logic-validation
       branch: master
       jdk: oraclejdk8
   -
@@ -20,6 +20,6 @@ deploy:
     script: .travis/deploy.sh
     skip_cleanup: true
     on:
-      repo: ExampleOrg/my-library
+      repo: finnetrolle/business-logic-validation
       tags: true
       jdk: oraclejdk8
