@@ -1,6 +1,8 @@
 package ru.finnetrolle.businesslogicvalidation;
 
-import ru.finnetrolle.businesslogicvalidation.dto.Violation;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Business Logic Validation
@@ -9,67 +11,74 @@ import ru.finnetrolle.businesslogicvalidation.dto.Violation;
 
 /**
  * Parent of all rules
- * @param <V> type of value
+ *
+ * @param <ELEMENT> type of value
  */
-public abstract class Rule<V> {
+public abstract class Rule<ELEMENT> {
 
-    public static RuleBuilder notice(Descriptor descriptor) {
-        return RuleBuilder.getInstance(descriptor, ViolationLevel.NOTICE);
-    }
+    protected final String description;
 
-    public static RuleBuilder permissible(Descriptor descriptor) {
-        return RuleBuilder.getInstance(descriptor, ViolationLevel.PERMISSIBLE);
-    }
-
-    public static RuleBuilder error(Descriptor descriptor) {
-        return RuleBuilder.getInstance(descriptor, ViolationLevel.ERROR);
-    }
-
-    public static RuleBuilder critical(Descriptor descriptor) {
-        return RuleBuilder.getInstance(descriptor, ViolationLevel.CRITICAL);
+    public Rule(String description) {
+        this.description = description;
     }
 
     /**
-     * Main validate method. Can not be overriden
-     * @param value value to validate
-     * @return null for success validation or violation otherwise
+     * Implement your validation logic here
+     *
+     * @param element
+     * @return
      */
-    final Violation check(V value) {
-        if (validate(value)) {
-            return null;
+    abstract protected boolean validate(ELEMENT element);
+
+    /**
+     * Override this method to output your violation message here
+     *
+     * @param element
+     * @return
+     */
+    public String getMessage(ELEMENT element) {
+        Map<String, Object> arguments = getArguments(element);
+        if (arguments.isEmpty()) {
+            return description + " failed";
         } else {
-            return Violation.create(getMessage(value), getCode(), getViolationLevel());
+            StringBuilder sb = new StringBuilder(description).append(" failed for element with");
+            arguments.forEach((k, v) -> sb.append(" ")
+                    .append(k)
+                    .append(" = ")
+                    .append(v.toString()));
+            return sb.toString();
         }
     }
 
     /**
-     * Override this method to implement your validation process
-     * @param value value to validate
-     * @return boolean result of validation
+     * Override this method to change default level
+     *
+     * @return
      */
-    protected abstract boolean validate(V value);
+    public ViolationLevel getLevel() {
+        return ViolationLevel.ERROR;
+    }
+
+    private List<Violation> produceViolations(ELEMENT element) {
+        return Collections.singletonList(Violation.builder(this, Violation.DEFAULT_SHARD).build(element));
+    }
 
     /**
-     * Override this method to define fail validation message
-     * You can use value to make message more clear
-     * @param value value
-     * @return fail validation description
+     * Override this method to define key values from your element
+     *
+     * @param element
+     * @return
      */
-    protected abstract String getMessage(V value);
+    public Map<String, Object> getArguments(ELEMENT element) {
+        return Collections.emptyMap();
+    }
 
-    /**
-     * Override this method to define violation level of your derived rule
-     * @return validation level
-     */
-    protected abstract ViolationLevel getViolationLevel();
-
-    /**
-     * Override this method to define code of rule
-     * @return code of rule
-     */
-    protected abstract Integer getCode();
-
-
-
+    protected List<Violation> check(ELEMENT element) {
+        if (validate(element)) {
+            return Collections.emptyList();
+        } else {
+            return produceViolations(element);
+        }
+    }
 
 }
