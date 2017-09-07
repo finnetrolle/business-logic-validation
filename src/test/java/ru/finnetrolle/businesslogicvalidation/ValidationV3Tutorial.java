@@ -3,7 +3,9 @@ package ru.finnetrolle.businesslogicvalidation;
 import org.junit.Test;
 
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class ValidationV3Tutorial {
 
@@ -40,6 +42,24 @@ public class ValidationV3Tutorial {
                 .getResult();
 
         assert result.getViolationsList().size() == 5;
+    }
+
+    @Test
+    public void simpleRuleExtended() {
+        List<Integer> numbers = Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
+
+        ValidationResult result = new ValidationResult();
+        result.applyRuleGroup(RuleGroup.named("test").validating(
+                SimpleRule.create(s -> s % 2 == 0, s -> "Element " + s.toString() + " is bad")
+        ), numbers);
+
+        assert result.getViolationsList().size() == 5;
+        Set<Violation> violationSet = new HashSet<>(result.getViolationsList());
+        assert violationSet.contains("Element 1 is bad");
+        assert violationSet.contains("Element 3 is bad");
+        assert violationSet.contains("Element 5 is bad");
+        assert violationSet.contains("Element 7 is bad");
+        assert violationSet.contains("Element 9 is bad");
     }
 
 }
