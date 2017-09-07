@@ -14,26 +14,26 @@ import java.util.stream.Collectors;
 public class ValidationResult {
 
     private final Map<String, List<Violation>> violationGroups = new HashMap<>();
+    private ViolationLevel violationLevel = ViolationLevel.NOTICE;
 
     /**
      * @return violation level for all groups
      */
     public ViolationLevel getViolationLevel() {
-        ViolationLevel level = ViolationLevel.NOTICE;
-        for (List<Violation> violationList : violationGroups.values()) {
-            for (Violation violation : violationList) {
-                if (violation.getViolationLevel().compareTo(level) > 0) {
-                    level = violation.getViolationLevel();
-                }
-            }
-        }
-        return level;
+        return violationLevel;
     }
 
     public ValidationResult addViolation(Violation violation) {
         List<Violation> violations = violationGroups
                 .computeIfAbsent(violation.getShardName(), k -> new ArrayList<>());
         violations.add(violation);
+        ViolationLevel maxVio = violations.stream()
+                .map(Violation::getViolationLevel)
+                .max(Comparator.naturalOrder())
+                .orElse(ViolationLevel.NOTICE);
+        if (maxVio.compareTo(violationLevel) > 0) {
+            violationLevel = maxVio;
+        }
         return this;
     }
 
@@ -51,6 +51,16 @@ public class ValidationResult {
 
     public <ELEMENT> ValidationResult applyRule(Rule<ELEMENT> rule) {
         addViolations(rule.check(null));
+        return this;
+    }
+
+    public <ELEMENT> ValidationResult applyRuleGroup(RuleGroup<ELEMENT> ruleGroup) {
+        addViolations(ruleGroup.validate(Collections.singletonList(null)));
+        return this;
+    }
+
+    public <ELEMENT> ValidationResult applyRuleGroup(RuleGroup<ELEMENT> ruleGroup, Collection<ELEMENT> elements) {
+        addViolations(ruleGroup.validate(elements));
         return this;
     }
 
