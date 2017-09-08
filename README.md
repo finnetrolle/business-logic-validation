@@ -36,12 +36,14 @@ We're trying to validate that name "James" has length > 3
 You can validate multiple times to get one big result. For example you have two lists - passport ids and names.
 You want one result with groups such 'passport validation' and 'name validation'. Let's make it:
 
+```
 VALIDATE
     passports BY GROUP 'passport validation' CONTAINS(
-        length = 10
+        length = 10,
         contains digit 6)
 AND names BY GROUP 'name validation' CONTAINS(
         length > 2)
+```
 
 Simple? I think yes. Let's take a look at code
 
@@ -52,6 +54,4 @@ Simple? I think yes. Let's take a look at code
                         SimpleRule.error("contains digit 6", p -> p.contains("6"))))
                 .and(NAMES).by(RuleGroup.named("Name Validation").validating(
                         SimpleRule.error("Name length > 2", p -> p.length() > 2)))
-                .and("hello").by(
-                        SimpleRule.error("Must be equal to hello", p -> p.equals("hello")));
 ```
