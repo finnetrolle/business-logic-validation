@@ -13,8 +13,41 @@ import java.util.stream.Collectors;
  */
 public class ValidationResult {
 
+    /**
+     * violation storage
+     */
     private final Map<String, List<Violation>> violationGroups = new HashMap<>();
+    /**
+     * Current violation level
+     */
     private ViolationLevel violationLevel = ViolationLevel.NOTICE;
+
+    /**
+     * Start validation for one element
+     * @param element
+     * @param <T> type of element
+     * @return builder chain
+     */
+    public static <T> PreparedElements<T> validate(T element) {
+        return new PreparedElements<>(Collections.singletonList(element));
+    }
+
+    /**
+     * Start validation for elements
+     * @param elements
+     * @param <T> type if elements
+     * @return builder chain
+     */
+    public static <T> PreparedElements<T> validate(List<T> elements) {
+        return new PreparedElements<>(elements);
+    }
+
+    /**
+     * @return true if violation level is above ERROR
+     */
+    public boolean passed() {
+        return violationLevel == ViolationLevel.NOTICE || violationLevel == ViolationLevel.PERMISSIBLE;
+    }
 
     /**
      * @return violation level for all groups
@@ -23,20 +56,46 @@ public class ValidationResult {
         return violationLevel;
     }
 
+    /**
+     * Add custom violation to validation result
+     * @param violation
+     */
     public ValidationResult addViolation(Violation violation) {
         List<Violation> violations = violationGroups
                 .computeIfAbsent(violation.getShardName(), k -> new ArrayList<>());
         violations.add(violation);
-        ViolationLevel maxVio = violations.stream()
-                .map(Violation::getViolationLevel)
-                .max(Comparator.naturalOrder())
-                .orElse(ViolationLevel.NOTICE);
-        if (maxVio.compareTo(violationLevel) > 0) {
-            violationLevel = maxVio;
+        if (violation.getViolationLevel().compareTo(violationLevel) > 0) {
+            violationLevel = violation.getViolationLevel();
         }
         return this;
     }
 
+    /**
+     * Continue validation process with new group of elements
+     * @return builder chain
+     */
+    public <T> PreparedElements<T> and(List<T> elements) {
+        return new PreparedElements<>(elements, this);
+    }
+
+    /**
+     * Continue validation process with new element
+     * @param element
+     * @param <T>
+     * @return
+     */
+    public <T> PreparedElements<T> and(T element) {
+        return new PreparedElements<>(Collections.singletonList(element), this);
+    }
+
+    public ValidationResult andNothingBy(Rule<Object> rule) {
+        this.addViolations(RuleGroup.common().validating(rule).validate(Collections.singletonList(null)));
+        return this;
+    }
+
+    /**
+     * Add some custom violations
+     */
     public ValidationResult addViolations(List<Violation> violations) {
         for (Violation violation : violations) {
             addViolation(violation);
@@ -44,52 +103,41 @@ public class ValidationResult {
         return this;
     }
 
-    public <ELEMENT> ValidationResult applyRule(Rule<ELEMENT> rule, ELEMENT element) {
-        addViolations(rule.check(element));
-        return this;
-    }
-
-    public <ELEMENT> ValidationResult applyRule(Rule<ELEMENT> rule) {
-        addViolations(rule.check(null));
-        return this;
-    }
-
-    public <ELEMENT> ValidationResult applyRuleGroup(RuleGroup<ELEMENT> ruleGroup) {
-        addViolations(ruleGroup.validate(Collections.singletonList(null)));
-        return this;
-    }
-
-    public <ELEMENT> ValidationResult applyRuleGroup(RuleGroup<ELEMENT> ruleGroup, Collection<ELEMENT> elements) {
-        addViolations(ruleGroup.validate(elements));
-        return this;
-    }
-
+    /**
+     * Get violations in one list
+     * @return
+     */
     public List<Violation> getViolationsList() {
         return violationGroups.values().stream().flatMap(Collection::stream).collect(Collectors.toList());
     }
 
+    /**
+     * Get grouped violations
+     * @return
+     */
     public Map<String, List<Violation>> getViolationMap() {
         return violationGroups;
     }
-
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         ValidationResult that = (ValidationResult) o;
-        return Objects.equals(violationGroups, that.violationGroups);
+        return Objects.equals(violationGroups, that.violationGroups) &&
+                violationLevel == that.violationLevel;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(violationGroups, violationLevel);
     }
 
     @Override
     public String toString() {
         return "ValidationResult{" +
                 "violationGroups=" + violationGroups +
+                ", violationLevel=" + violationLevel +
                 '}';
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(violationGroups);
     }
 }

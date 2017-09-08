@@ -42,7 +42,7 @@ public class RuleGroup<ELEMENT> {
         List<Violation> violations = new ArrayList<>();
         for (ELEMENT element : elements) {
             for (Rule<ELEMENT> rule : orderedListOfRules) {
-                List<Violation> valRes = rule.check(element);
+                List<Violation> valRes = rule.check(element, name);
                 violations.addAll(valRes);
                 if (!valRes.isEmpty() && (rule.getLevel() == ViolationLevel.CRITICAL || rule instanceof Stopper)) {
                     break;

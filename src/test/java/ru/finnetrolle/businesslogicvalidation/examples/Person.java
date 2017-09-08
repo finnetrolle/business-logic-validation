@@ -1,6 +1,5 @@
-package ru.finnetrolle.businesslogicvalidation.extendedRules;
+package ru.finnetrolle.businesslogicvalidation.examples;
 
-import java.util.Date;
 import java.util.Objects;
 
 public class Person {

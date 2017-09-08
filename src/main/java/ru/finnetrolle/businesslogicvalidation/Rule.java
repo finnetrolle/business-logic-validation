@@ -37,17 +37,7 @@ public abstract class Rule<ELEMENT> {
      * @return
      */
     public String getMessage(ELEMENT element) {
-        Map<String, Object> arguments = getArguments(element);
-        if (arguments.isEmpty()) {
-            return description + " failed";
-        } else {
-            StringBuilder sb = new StringBuilder(description).append(" failed for element with");
-            arguments.forEach((k, v) -> sb.append(" ")
-                    .append(k)
-                    .append(" = ")
-                    .append(v.toString()));
-            return sb.toString();
-        }
+        return description;
     }
 
     /**
@@ -59,8 +49,8 @@ public abstract class Rule<ELEMENT> {
         return ViolationLevel.ERROR;
     }
 
-    private List<Violation> produceViolations(ELEMENT element) {
-        return Collections.singletonList(Violation.builder(this, Violation.DEFAULT_SHARD).build(element));
+    private List<Violation> produceViolations(ELEMENT element, String groupName) {
+        return Collections.singletonList(Violation.builder(this, groupName).build(element));
     }
 
     /**
@@ -73,11 +63,17 @@ public abstract class Rule<ELEMENT> {
         return Collections.emptyMap();
     }
 
-    protected List<Violation> check(ELEMENT element) {
+    /**
+     * Override this method to enable multiple violations per one validation
+     * @param element
+     * @param groupName
+     * @return
+     */
+    protected List<Violation> check(ELEMENT element, String groupName) {
         if (validate(element)) {
             return Collections.emptyList();
         } else {
-            return produceViolations(element);
+            return produceViolations(element, groupName);
         }
     }
 
